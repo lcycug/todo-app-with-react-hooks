@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
   Todo.find()
     .sort({ date: -1 })
     .then(todos => {
-      if (!todos) {
+      if (!todos || Object.keys(todos).length === 0) {
         return res.status(404).json({ todo: "No item to show." });
       }
       res.json(todos);
@@ -28,12 +28,12 @@ router.get("/", (req, res) => {
  * @access  Public
  */
 router.post("/", (req, res) => {
-  const { todo } = req.body;
-  if (isEmpty(todo)) {
+  const { text } = req.body;
+  if (isEmpty(text)) {
     return res.status(400).json({ todo: "Text is required." });
   }
   const newTodo = new Todo({
-    text: todo
+    text
   });
 
   newTodo
