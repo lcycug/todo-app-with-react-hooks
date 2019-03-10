@@ -29,6 +29,7 @@ router.get("/", (req, res) => {
  */
 router.post("/", (req, res) => {
   const { text } = req.body;
+  console.log(req.body);
   if (isEmpty(text)) {
     return res.status(400).json({ todo: "Text is required." });
   }
@@ -38,8 +39,12 @@ router.post("/", (req, res) => {
 
   newTodo
     .save()
-    .then(todo => res.json(todo))
-    .catch(err => res.status(400).json({ todo: err }));
+    .then(() => {
+      Todo.find()
+        .sort({ date: -1 })
+        .then(todos => res.json(todos));
+    })
+    .catch(err => console.log(err));
 });
 
 /**
@@ -82,7 +87,11 @@ router.post("/update/:todoId", (req, res) => {
     todo.text = text;
     todo
       .save()
-      .then(todo => res.json({ todo: "success" }))
+      .then(() => {
+        Todo.find()
+          .sort({ date: -1 })
+          .then(todos => res.json(todos));
+      })
       .catch(err => res.status(400).json(err));
   });
 });
@@ -100,7 +109,11 @@ router.delete("/:todoId", (req, res) => {
 
     todo
       .remove()
-      .then(todo => res.json(todo))
+      .then(() => {
+        Todo.find()
+          .sort({ date: -1 })
+          .then(todos => res.json(todos));
+      })
       .catch(err => res.status(400).json(err));
   });
 });

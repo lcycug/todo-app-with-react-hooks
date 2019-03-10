@@ -7,3 +7,32 @@ export const getTodos = () => dispatch => {
     .then(res => dispatch({ type: GET_TODOS, payload: res.data }))
     .catch(err => dispatch({ type: GET_ERROR, payload: err.response.data }));
 };
+
+export const addTodo = (targetId, text) => dispatch => {
+  console.log(targetId);
+  if (targetId) {
+    axios
+      .post(`/api/todo/update/${targetId}`, { text })
+      .then(res => dispatch({ type: GET_TODOS, payload: res.data }))
+      .catch(err => dispatch({ type: GET_ERROR, payload: err.response.data }));
+  } else {
+    axios
+      .post("/api/todo", { text })
+      .then(res => dispatch({ type: GET_TODOS, payload: res.data }))
+      .catch(err => dispatch({ type: GET_ERROR, payload: err.response.data }));
+  }
+};
+
+export const deleteTodo = todoId => dispatch => {
+  axios
+    .delete(`/api/todo/${todoId}`)
+    .then(res => dispatch({ type: GET_TODOS, payload: res.data }))
+    .catch(err => dispatch({ type: GET_ERROR, payload: err.response.data }));
+};
+
+export const editTodo = (todoId, text) => dispatch => {
+  axios
+    .post(`/api/todo/update/${todoId}`, { text })
+    .then(res => dispatch({ type: GET_TODOS, payload: res.data }))
+    .catch(err => dispatch({ type: GET_ERROR, payload: err.response.data }));
+};

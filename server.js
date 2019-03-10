@@ -1,10 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParder = require("body-parser");
+const bodyParser = require("body-parser");
 
 const app = express();
 
-app.use(bodyParder.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // handle json data
+app.use(bodyParser.urlencoded({ extended: true })); // handle URL-encoded data
 
 app.get("/", (req, res) => res.send("Success!"));
 
