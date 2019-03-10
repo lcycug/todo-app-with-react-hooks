@@ -1,4 +1,8 @@
 node_modules
+client/node_modules
 package-lock.json
+client/package-lock.json
 yarn.lock
+client/yarn.lock
 .prettierrc
+config/dev_keys.js
