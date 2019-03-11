@@ -36,3 +36,10 @@ export const editTodo = (todoId, text) => dispatch => {
     .then(res => dispatch({ type: GET_TODOS, payload: res.data }))
     .catch(err => dispatch({ type: GET_ERROR, payload: err.response.data }));
 };
+
+export const switchStatus = todoId => dispatch => {
+  axios
+    .post(`/api/todo/switch/${todoId}`)
+    .then(res => dispatch({ type: GET_TODOS, payload: res.data }))
+    .catch(err => dispatch({ type: GET_ERROR, payload: err.response.data }));
+};

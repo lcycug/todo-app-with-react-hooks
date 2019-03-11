@@ -61,7 +61,11 @@ router.post("/switch/:todoId", (req, res) => {
     todo.completed = !currentStatus;
     todo
       .save()
-      .then(todo => res.json(todo))
+      .then(() => {
+        Todo.find()
+          .sort({ date: -1 })
+          .then(todos => res.json(todos));
+      })
       .catch(err => res.status(400).json(err));
   });
 });

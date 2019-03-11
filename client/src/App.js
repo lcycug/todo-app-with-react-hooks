@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { getTodos, addTodo, deleteTodo, editTodo } from "./actions/todoActions";
+import {
+  getTodos,
+  addTodo,
+  deleteTodo,
+  editTodo,
+  switchStatus
+} from "./actions/todoActions";
 import Spinner from "./components/Spinner";
 
 function App(props) {
@@ -27,16 +33,22 @@ function App(props) {
     setTargetId("");
   };
   const handleEdit = event => {
-    debugger;
-    setTargetId(event.target.id);
-    setText(event.target.attributes.value.nodeValue);
+    setTargetId(targetId !== event.target.id ? event.target.id : "");
+    setText(
+      targetId !== event.target.id
+        ? event.target.attributes.value.nodeValue
+        : ""
+    );
   };
   const handleDelete = event => {
     props.deleteTodo(event.currentTarget.id);
     showLoading();
   };
+  const handleSwitch = event => {
+    props.switchStatus(event.target.id);
+  };
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto max-w-md">
       <h1 className="text-center text-grey-darkest m-2 p-1">Todo App</h1>
 
       {Object.keys(todos).length === 0 ? (
@@ -54,7 +66,7 @@ function App(props) {
               <button
                 onClick={handleSubmit}
                 type="submit"
-                className="border border-grey-light rounded-lg p-1 m-2 hover:text-bold"
+                className="border border-grey-light rounded-lg px-3 py-1 m-1 hover:border-orange"
               >
                 Submit
               </button>
@@ -64,19 +76,36 @@ function App(props) {
             {todos.map(todo => (
               <li
                 key={todo._id}
-                className="list-reset rounded-lg py-3 my-2 border border-gray bg-transparent hover:bg-blue text-blue-dark hover:text-white cursor-pointer select-none"
+                id={todo._id}
+                onDoubleClick={handleSwitch}
+                className={`list-reset rounded-lg py-3 my-2 border border-grey cursor-pointer select-none ${
+                  todo.completed
+                    ? "italic line-through font-hairline"
+                    : "font-black"
+                } ${
+                  targetId === todo._id
+                    ? "bg-blue text-white"
+                    : "bg-transparent hover:bg-blue text-blue-dark hover:text-white"
+                }`}
               >
+                <i
+                  id={todo._id}
+                  onClick={handleSwitch}
+                  className={`far float-left ml-5 ${
+                    todo.completed ? "fa-check-square" : "fa-square"
+                  }`}
+                />
                 {todo.text}
-                <span className="absolute pin-r mr-5 pr-5">
+                <span className="float-right">
                   <i
                     id={todo._id}
                     value={todo.text}
-                    className="far fa-edit mr-5 pr-5 text-green-light"
+                    className="far fa-edit pr-5 text-green-light"
                     onClick={handleEdit}
                   />
                   <i
                     id={todo._id}
-                    className="far fa-trash-alt mr-5 pr-5 text-red-light"
+                    className="far fa-trash-alt pr-5 text-red-light"
                     onClick={handleDelete}
                   />
                 </span>
@@ -95,5 +124,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getTodos, addTodo, deleteTodo, editTodo }
+  { getTodos, addTodo, deleteTodo, editTodo, switchStatus }
 )(App);
